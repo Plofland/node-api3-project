@@ -1,12 +1,12 @@
 const express = require('express');
-const { logger } = require('../middleware/middleware.js');
-const postFunc = require('./posts-model.js');
+// const { logger } = require('../middleware/middleware.js');
+const postsFunc = require('./posts-model.js');
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
   // logger();
-  postFunc
+  postsFunc
     .get()
     .then((posts) => {
       res.status(200).json(posts);
@@ -19,6 +19,8 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   // RETURN THE POST OBJECT
   // this needs a middleware to verify post id
+  
 });
 
+// do not forget to export the router
 module.exports = router;

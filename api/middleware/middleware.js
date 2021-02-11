@@ -6,6 +6,31 @@ function logger(req, res, next) {
 }
 
 function validateUserId(req, res, next) {
+  // do your magic!
+  const {id} = req.params;
+  const userId = postFunc.getById(id);
+  try {
+    if(!id){
+      res.status(400).json({message: `No user with the id of ${id}`})
+    } else {
+      req.userId = userId;
+      next();
+    }
+  } catch (error) {
+    res.status(500).json(`Server error: ${error}`)
+  }
+}
+
+function validateUser(req, res, next) {
+  // do your magic!
+  try {
+    if()
+  } catch (error) {
+    
+  }
+}
+
+function validatePost(req, res, next) {
   const {id} = req.params;
   const postId = postFunc.getById(id);
   try {
@@ -16,17 +41,8 @@ function validateUserId(req, res, next) {
       next();
     }
   } catch (error) {
-    res.status(500).json({`Server error: ${error}`})
+    res.status(500).json(`Server error: ${error}`)
   }
-
-}
-
-function validateUser(req, res, next) {
-  // do your magic!
-}
-
-function validatePost(req, res, next) {
-  // do your magic!
 }
 
 // do not forget to expose these functions to other modules
