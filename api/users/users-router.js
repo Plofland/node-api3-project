@@ -1,19 +1,36 @@
 const express = require('express');
+const userFunc = require('./users-model');
+const { validateUserId, validatePost } = require('../middleware/middleware');
+const { restart } = require('nodemon');
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  // RETURN AN ARRAY WITH ALL THE USERS
+  userFunc
+    .get()
+    .then((users) => {
+      res.status(200).json(users);
+    })
+    .catch(() => {
+      res.status(500).json({ message: 'Error retrieving the users' });
+    });
 });
 
-router.get('/:id', (req, res) => {
-  // RETURN THE USER OBJECT
-  // this needs a middleware to verify user id
+router.get('/:id', validateUserId, (req, res) => {
+  res.status(200).json(req.userId);
 });
 
-router.post('/', (req, res) => {
+router.post('/', validatePost, (req, res) => {
   // RETURN THE NEWLY CREATED USER OBJECT
   // this needs a middleware to check that the request body is valid
+  userFunc
+  .insert()
+  .then(post => {
+    res.status(200).json(post);
+  })
+  .catch(() => {
+    res.status().json({})
+  })
 });
 
 router.put('/:id', (req, res) => {
@@ -39,3 +56,4 @@ router.post('/:id/posts', (req, res) => {
 });
 
 // do not forget to export the router
+module.exports = router;
