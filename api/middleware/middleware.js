@@ -22,13 +22,13 @@ const validateUserId = async (req, res, next) => {
   } catch (error) {
     res.status(500).json(`Server error: ${error}`);
   }
-}
+};
 
 function validateUser(req, res, next) {
-  // do your magic!
+  const { name } = req.body
   try {
-    if (!req.body.text || !req.body.sender) {
-      res.status(400).json({ message: `Please enter valid name or text` });
+    if (!name) {
+      res.status(400).json({ message: `Please enter valid name` });
     } else {
       next();
     }
@@ -38,13 +38,13 @@ function validateUser(req, res, next) {
 }
 
 function validatePost(req, res, next) {
-  const name = req.body.name;
-  const text = req.body.text;
+  const { name, text } = req.body;
+  // const text = req.body.text;
+  // const name = req.body.name;
   try {
     if (!name || !text) {
-      res.status(400).json({ message: `No post with the id of ${id}` });
+      res.status(400).json({ message: `Please enter valid name or text` });
     } else {
-      
       next();
     }
   } catch (error) {

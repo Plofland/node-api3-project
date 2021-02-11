@@ -1,7 +1,6 @@
 const express = require('express');
 const userFunc = require('./users-model');
-const { validateUserId, validatePost } = require('../middleware/middleware');
-const { restart } = require('nodemon');
+const { validateUserId, validatePost, validateUser } = require('../middleware/middleware');
 
 const router = express.Router();
 
@@ -20,17 +19,17 @@ router.get('/:id', validateUserId, (req, res) => {
   res.status(200).json(req.userId);
 });
 
-router.post('/', validatePost, (req, res) => {
+router.post('/', validateUser, (req, res) => {
   // RETURN THE NEWLY CREATED USER OBJECT
   // this needs a middleware to check that the request body is valid
   userFunc
-  .insert()
-  .then(post => {
-    res.status(200).json(post);
-  })
-  .catch(() => {
-    res.status().json({})
-  })
+    .insert(req.body)
+    .then((post) => {
+      res.status(200).json(post);
+    })
+    .catch(() => {
+      res.status(500).json({ message: 'Failed to add new user' });
+    });
 });
 
 router.put('/:id', (req, res) => {
@@ -39,17 +38,17 @@ router.put('/:id', (req, res) => {
   // and another middleware to check that the request body is valid
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', validateUserId, (req, res) => {
   // RETURN THE FRESHLY DELETED USER OBJECT
   // this needs a middleware to verify user id
 });
 
-router.get('/:id/posts', (req, res) => {
+router.get('/:id/posts', validateUserId, (req, res) => {
   // RETURN THE ARRAY OF USER POSTS
   // this needs a middleware to verify user id
 });
 
-router.post('/:id/posts', (req, res) => {
+router.post('/:id/posts', validateUserId,  (req, res) => {
   // RETURN THE NEWLY CREATED USER POST
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
