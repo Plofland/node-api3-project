@@ -1,6 +1,10 @@
 const express = require('express');
 const userFunc = require('./users-model');
-const { validateUserId, validatePost, validateUser } = require('../middleware/middleware');
+const {
+  validateUserId,
+  validatePost,
+  validateUser
+} = require('../middleware/middleware');
 
 const router = express.Router();
 
@@ -20,8 +24,6 @@ router.get('/:id', validateUserId, (req, res) => {
 });
 
 router.post('/', validateUser, (req, res) => {
-  // RETURN THE NEWLY CREATED USER OBJECT
-  // this needs a middleware to check that the request body is valid
   userFunc
     .insert(req.body)
     .then((post) => {
@@ -41,6 +43,14 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', validateUserId, (req, res) => {
   // RETURN THE FRESHLY DELETED USER OBJECT
   // this needs a middleware to verify user id
+  userFunc
+    .remove(req.params.id)//works but is buggy, takes any number in params
+    .then(() => {
+      res.status(200).json({ message: `User successfully removed` });
+    })
+    .catch(() => {
+      res.status(500).json({ message: 'Error in removing user' });
+    });
 });
 
 router.get('/:id/posts', validateUserId, (req, res) => {
@@ -48,7 +58,7 @@ router.get('/:id/posts', validateUserId, (req, res) => {
   // this needs a middleware to verify user id
 });
 
-router.post('/:id/posts', validateUserId,  (req, res) => {
+router.post('/:id/posts', validateUserId, (req, res) => {
   // RETURN THE NEWLY CREATED USER POST
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
